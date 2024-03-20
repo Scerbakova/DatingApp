@@ -7,7 +7,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(DataContext context) : ControllerBase
+public class UsersController(DataContext context) : ControllerBase
 {
     private readonly DataContext _context = context;
 
