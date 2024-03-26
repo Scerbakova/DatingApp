@@ -1,5 +1,5 @@
 
 export interface LoginRegisterFormModel {
-    username: string;
+    userName: string;
     password: string;
   }
