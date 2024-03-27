@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { LoginRegisterFormModel } from '../_models/loginRegisterModel';
 import { AccountService } from '../_services/account.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -18,7 +17,6 @@ export class NavComponent {
   constructor(
     public accountService: AccountService,
     private router: Router,
-    private toastr: ToastrService
   ) {}
 
   login() {
@@ -28,7 +26,6 @@ export class NavComponent {
         this.model.userName = '';
         this.model.password = '';
       },
-      error: ({error}) => this.toastr.error(error),
     });
   }
 
