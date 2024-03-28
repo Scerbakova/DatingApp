@@ -12,13 +12,13 @@ public class Seed
     {
         if (await context.Users.AnyAsync()) return;
 
-        var userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
+        string userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
+        JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
+        List<AppUser> users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
 
-        foreach (var user in users)
+        foreach (AppUser user in users)
         {
-            using var hmac = new HMACSHA512();
+            using HMACSHA512 hmac = new();
 
             user.UserName = user.UserName.ToLower();
             user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));

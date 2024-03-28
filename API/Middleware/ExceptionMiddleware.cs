@@ -22,13 +22,13 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var response = _env.IsDevelopment()
-            ? new ApiException(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
-            : new ApiException(context.Response.StatusCode, ex.Message, "Internal Server Error");
+            ApiException response = _env.IsDevelopment()
+            ? new(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
+            : new(context.Response.StatusCode, ex.Message, "Internal Server Error");
 
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            JsonSerializerOptions options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-            var json = JsonSerializer.Serialize(response, options);
+            string json = JsonSerializer.Serialize(response, options);
 
             await context.Response.WriteAsync(json);
 

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { LoginRegisterFormModel } from '../_models/loginRegisterModel';
-import { AccountService } from '../_services/account.service';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '../_services/account.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-nav',
@@ -9,22 +9,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./nav.component.scss'],
 })
 export class NavComponent {
-  model: LoginRegisterFormModel = {
-    userName: '',
-    password: '',
-  };
+  @ViewChild('loginForm') loginForm?: NgForm;
+  model?: any = {};
 
-  constructor(
-    public accountService: AccountService,
-    private router: Router,
-  ) {}
+  constructor(public accountService: AccountService, private router: Router) {}
 
   login() {
     this.accountService.login(this.model).subscribe({
       next: () => {
         this.router.navigateByUrl('/members');
-        this.model.userName = '';
-        this.model.password = '';
+        this.loginForm?.reset();
       },
     });
   }

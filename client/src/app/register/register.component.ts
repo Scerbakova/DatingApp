@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { LoginRegisterFormModel } from '../_models/loginRegisterModel';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -9,11 +9,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  @ViewChild('registerForm') registerForm?: NgForm;
   @Output() cancelRegister = new EventEmitter();
-  model: LoginRegisterFormModel = {
-    userName: '',
-    password: '',
-  };
+  model: any = {};
 
   constructor(
     private accoutService: AccountService,
@@ -28,8 +26,7 @@ export class RegisterComponent {
   }
 
   cancelRegisterMode() {
-    this.model.userName = '';
-    this.model.password = '';
+    this.registerForm?.reset();
     this.cancelRegister.emit(false);
   }
 }

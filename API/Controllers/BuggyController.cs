@@ -19,7 +19,7 @@ public class BuggyController(DataContext context) : BaseApiController
     [HttpGet("not-found")]
     public ActionResult<AppUser> GetNotFound()
     {
-        var thing = _context.Users.Find(-1);
+        AppUser thing = _context.Users.Find(-1);
         if (thing == null) return NotFound();
         return thing;
     }
@@ -28,8 +28,8 @@ public class BuggyController(DataContext context) : BaseApiController
     public ActionResult<string> GetServerError()
     {
 
-        var thing = _context.Users.Find(-1);
-        var thingToReturn = thing.ToString();
+        AppUser thing = _context.Users.Find(-1);
+        string thingToReturn = thing.ToString();
         return thingToReturn;
     }
 
