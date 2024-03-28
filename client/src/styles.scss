@@ -15,6 +15,9 @@
 /* Importing ngx-toastr CSS file. */
 @import "node_modules/ngx-toastr/toastr.css";
 
+/*Importing ngx-spinner Css file */
+@import "node_modules/ngx-spinner/animations/ball-scale-multiple.css";
+
 .tab-panel {
   border: 1px solid #ddd;
   padding: 10px;
