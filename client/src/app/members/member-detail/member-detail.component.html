@@ -21,13 +21,13 @@
         <div>
           <strong
             >Last active:
-            <p>{{ member.lastActive }}</p></strong
+            <p>{{ member.lastActive + 'Z' | timeago }}</p></strong
           >
         </div>
         <div>
           <strong
             >Member since:
-            <p>{{ member.created }}</p></strong
+            <p>{{ member.created | date }}</p></strong
           >
         </div>
       </div>
@@ -53,7 +53,11 @@
         <p>{{ member.interests }}</p>
       </tab>
       <tab heading="Photos" #photoTab="tab">
-        <gallery *ngIf="photoTab.active" [items]="images" class="gallery"></gallery>
+        <gallery
+          *ngIf="photoTab.active"
+          [items]="images"
+          class="gallery"
+        ></gallery>
       </tab>
       <tab heading="Messages">
         <p>Messages will go here</p>

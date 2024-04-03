@@ -20,6 +20,14 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
     [HttpGet]
     public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
     {
+        AppUser currentUser = await _userRepository.GetUserByUserNameAsync(User.GetUserName());
+        userParams.CurrentUsername = currentUser.UserName;
+
+        if(string.IsNullOrEmpty(userParams.Gender))
+        {
+            userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+        }
+
         PagedList<MemberDto> users = await _userRepository.GetMembersAsync(userParams);
 
         Response.AddPaginationHeader(new PaginationHeader
