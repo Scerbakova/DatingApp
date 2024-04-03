@@ -1,7 +1,7 @@
 ﻿using API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API;
+namespace API.Controllers;
 
 [ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
