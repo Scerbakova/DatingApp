@@ -1,5 +1,7 @@
-﻿using API.Entities;
+﻿using API.DTOs;
+using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,5 +37,16 @@ public class LikesController(IUserRepository userRepository, ILikesRepository li
 
         if (await _userRepository.SaveAllAsync()) return Ok();
         return BadRequest("Failed to like user");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PagedList<LikeDto>>> GetUserLikes([FromQuery] LikesParams likesParams)
+    {
+        likesParams.UserId = User.GetUserId();
+        PagedList<LikeDto> users = await _likesRepository.GetUserLikes(likesParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
+
+        return Ok(users);
     }
 }
