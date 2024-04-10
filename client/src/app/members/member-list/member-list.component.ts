@@ -18,12 +18,12 @@ export class MemberListComponent implements OnInit {
     { value: 'female', displayValue: 'Females' },
   ];
 
-  constructor(private memberService: MembersService) {
-    this.userParams = this.memberService.getUserParams();
-  }
+  constructor(private memberService: MembersService) {}
 
   ngOnInit() {
+    this.userParams = this.memberService.getUserParams();
     this.loadMembers();
+    console.log(this.userParams, "component")
   }
 
   resetFilters() {

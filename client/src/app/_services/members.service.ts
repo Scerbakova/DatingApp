@@ -21,14 +21,13 @@ export class MembersService {
   constructor(
     private http: HttpClient,
     private accountService: AccountService
-  ) {}
-
-  getUser() {
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe((user) => {
       if (user) {
         this.user = user;
         this.userParams = new UserParams(user);
       }
+      console.log(this.userParams, "service")
     });
   }
 
