@@ -23,7 +23,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
         AppUser currentUser = await _userRepository.GetUserByUserNameAsync(User.GetUserName());
         userParams.CurrentUsername = currentUser.UserName;
 
-        if(string.IsNullOrEmpty(userParams.Gender))
+        if (string.IsNullOrEmpty(userParams.Gender))
         {
             userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
         }
