@@ -11,6 +11,7 @@ import { Message } from 'src/app/_models/message';
 import { AccountService } from 'src/app/_services/account.service';
 import { User } from 'src/app/_models/user';
 import { take } from 'rxjs';
+import { PresenceService } from 'src/app/_services/presence.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -36,7 +37,8 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    public presenceService: PresenceService
   ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: (user) => {
@@ -58,7 +60,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.messageService.stopHubConnection();
+    this.messageService.stopHubConnection();
   }
 
   loadMessages() {
@@ -77,7 +79,9 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   onTabActivated(data: TabDirective) {
     this.activeTab = data;
     if (this.activeTab.heading === 'Messages' && this.user) {
-      this.loadMessages();
+      this.messageService.createHubConnection(this.user, this.member.userName);
+    } else {
+      this.messageService.stopHubConnection();
     }
   }
 
