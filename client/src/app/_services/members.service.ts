@@ -15,18 +15,16 @@ export class MembersService {
   baseUrl = environment.apiUrl;
   members: Member[] = [];
   memberCache = new Map();
-  user?: User | null
+  user?: User | null;
   userParams?: UserParams;
 
   constructor(
     private http: HttpClient,
     private accountService: AccountService
   ) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: (user) => {
-        if (user) this.userParams = new UserParams(user);
-        this.user = user;
-      },
+    this.accountService.currentUser$.pipe(take(1)).subscribe((user) => {
+      if (user) this.userParams = new UserParams(user);
+      this.user = user;
     });
   }
 

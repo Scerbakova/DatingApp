@@ -7,6 +7,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { User } from '../_models/user';
 import { BehaviorSubject, take } from 'rxjs';
 import { BusyService } from './busy.service';
+import { Group } from '../_models/group';
 
 @Injectable({
   providedIn: 'root',
@@ -20,29 +21,43 @@ export class MessageService {
 
   constructor(private http: HttpClient, private busyService: BusyService) {}
 
-createHubConnection(user: User, otherUsername: string) {
+  createHubConnection(user: User, otherUsername: string) {
     this.busyService.busy();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
-        accessTokenFactory: () => user.token
+        accessTokenFactory: () => user.token,
       })
       .withAutomaticReconnect()
       .build();
-    this.hubConnection.start()
-      .catch(error => console.log(error))
+    this.hubConnection
+      .start()
+      .catch((error) => console.log(error))
       .finally(() => this.busyService.idle());
 
-    this.hubConnection.on('ReceiveMessageThread', messages => {
+    this.hubConnection.on('ReceiveMessageThread', (messages: Message[]) => {
       this.messageThreadSource.next(messages);
-    })
+    });
 
-    this.hubConnection.on('NewMessage', message => {
+    this.hubConnection.on('UpdatedGroup', (group: Group) => {
+      if (group.connections.some((g) => g.username === otherUsername)) {
+        this.messageThread$.pipe(take(1)).subscribe((messages) => {
+          messages.forEach((message) => {
+            if (!message.dateRead) {
+              message.dateRead = new Date(Date.now());
+            }
+          });
+          this.messageThreadSource.next([...messages]);
+        });
+      }
+    });
+
+    this.hubConnection.on('NewMessage', (message: Message) => {
       this.messageThread$.pipe(take(1)).subscribe({
-        next: messages => {
-          this.messageThreadSource.next([...messages, message])
-        }
-      })
-    })
+        next: (messages) => {
+          this.messageThreadSource.next([...messages, message]);
+        },
+      });
+    });
   }
 
   stopHubConnection() {
