@@ -1,10 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TimeagoModule } from 'ngx-timeago';
 import { MessageService } from 'src/app/_services/message.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-member-messages',
   standalone: true,
   templateUrl: './member-messages.component.html',
@@ -20,7 +26,9 @@ export class MemberMessagesComponent {
 
   sendMessage() {
     if (!this.username) return;
-    this.messageService.sendMessage(this.username, this.messageContent).then(() => {
+    this.messageService
+      .sendMessage(this.username, this.messageContent)
+      .then(() => {
         this.messageForm?.reset();
       });
   }
