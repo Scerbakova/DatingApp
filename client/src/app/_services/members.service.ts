@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, of, take } from 'rxjs';
+import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
 import { User } from '../_models/user';
@@ -16,30 +16,27 @@ export class MembersService {
   members: Member[] = [];
   memberCache = new Map();
   user?: User | null;
-  userParams?: UserParams;
+  private userParamsSubject = new BehaviorSubject<UserParams | null>(null);
+  userParams$: Observable<UserParams | null> =
+    this.userParamsSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private accountService: AccountService
   ) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe((user) => {
-      if (user) this.userParams = new UserParams(user);
-      this.user = user;
+    this.accountService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.user = user;
+        this.userParamsSubject.next(new UserParams(user));
+      } else {
+        this.userParamsSubject.next(null);
+      }
     });
-  }
-
-  getUserParams() {
-    return this.userParams;
-  }
-
-  setUserParams(params: UserParams) {
-    this.userParams = params;
   }
 
   resetUserParams() {
     if (!this.user) return;
-    this.userParams = new UserParams(this.user);
-    return this.userParams;
+    this.userParamsSubject.next(new UserParams(this.user));
   }
 
   getMembers(userParams: UserParams) {
