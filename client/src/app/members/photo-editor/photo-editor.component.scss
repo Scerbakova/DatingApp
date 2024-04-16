@@ -5,3 +5,18 @@
 input[type="file"] {
   color: transparent;
 }
+
+.image-container {
+  position: relative;
+  width: 200px;
+}
+
+.approval-text {
+  position: absolute;
+  top: 35%;
+  right: 5%;
+  background-color: rgba(0, 0, 0, 0.44);
+  transform: rotate(-0.1turn);
+  padding: 0 11%;
+  font-weight: 700;
+}

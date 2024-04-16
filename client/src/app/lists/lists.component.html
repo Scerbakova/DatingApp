@@ -31,7 +31,7 @@
     <p *ngIf="!members?.length">Nothing found</p>
   </div>
 </div>
-<div class="d-flex justify-content-center" *ngIf="pagination">
+<div class="d-flex justify-content-center" *ngIf="pagination && members?.length">
   <pagination
     [boundaryLinks]="true"
     [totalItems]="pagination.totalItems"

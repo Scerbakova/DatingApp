@@ -40,7 +40,10 @@ public class UsersController(IUnitOfWork uow, IMapper mapper, IPhotoService phot
     [HttpGet("{userName}")]
     public async Task<ActionResult<MemberDto>> GetUser(string userName)
     {
-        return await _uow.UserRepository.GetMemberAsync(userName);
+        var currentUsername = User.GetUserName();
+        return await _uow.UserRepository.GetMemberAsync(userName,
+        isCurrentUser: currentUsername == userName
+        );
     }
 
     [HttpPut]
@@ -73,8 +76,6 @@ public class UsersController(IUnitOfWork uow, IMapper mapper, IPhotoService phot
             Url = result.SecureUrl.AbsoluteUri,
             PublicId = result.PublicId
         };
-
-        if (user.Photos.Count == 0) photo.IsMain = true;
 
         user.Photos.Add(photo);
 
@@ -119,7 +120,7 @@ public class UsersController(IUnitOfWork uow, IMapper mapper, IPhotoService phot
 
         if (user == null) return NotFound();
 
-        Photo photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+        Photo photo = await _uow.PhotosRepository.GetPhotoById(photoId);
 
         if (photo == null) return NotFound();
 
